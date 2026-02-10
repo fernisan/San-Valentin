@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¿Serás mi San Valentín?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #fff0f3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Lato', sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Fondo con corazones flotantes */
+    .hearts-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .heart-float {
+      position: absolute;
+      font-size: 1.2rem;
+      opacity: 0.18;
+      animation: floatUp linear infinite;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(110vh) rotate(-10deg); opacity: 0; }
+      10% { opacity: 0.18; }
+      90% { opacity: 0.18; }
+      100% { transform: translateY(-10vh) rotate(10deg); opacity: 0; }
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: #ffffffee;
+      border-radius: 2.5rem;
+      padding: 3rem 3.5rem;
+      max-width: 460px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 8px 60px #ff6b8a33, 0 2px 12px #ff6b8a18;
+      border: 1.5px solid #ffd6e0;
+    }
+
+    .big-heart {
+      font-size: 5rem;
+      display: block;
+      margin-bottom: 0.5rem;
+      animation: heartbeat 1.2s ease-in-out infinite;
+    }
+
+    @keyframes heartbeat {
+      0%,100% { transform: scale(1); }
+      15% { transform: scale(1.18); }
+      30% { transform: scale(1); }
+      45% { transform: scale(1.1); }
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: #c0385a;
+      margin-bottom: 0.4rem;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: #d4708a;
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+
+    .bear {
+      font-size: 6rem;
+      display: block;
+      margin: 0 auto 1.2rem;
+      transition: all 0.4s;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+
+    .btn-yes {
+      background: linear-gradient(135deg, #ff6b8a, #e83e6c);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 0.75em 2em;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 20px #ff6b8a55;
+      transition: transform 0.15s, box-shadow 0.15s;
+      font-size: 16px;
+    }
+
+    .btn-yes:hover {
+      transform: scale(1.07);
+      box-shadow: 0 6px 30px #ff6b8a88;
+    }
+
+    .btn-no {
+      background: #f5f5f5;
+      color: #888;
+      border: 1.5px solid #ddd;
+      border-radius: 50px;
+      padding: 0.75em 2em;
+      font-family: 'Lato', sans-serif;
+      cursor: pointer;
+      transition: transform 0.15s;
+      font-size: 16px;
+      white-space: nowrap;
+    }
+
+    .btn-no:hover {
+      background: #efefef;
+    }
+
+    /* Pantalla de éxito */
+    .success-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .success-screen .big-heart-success {
+      font-size: 6rem;
+      animation: popIn 0.5s cubic-bezier(.175,.885,.32,1.275) forwards, heartbeat 1.2s 0.5s ease-in-out infinite;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .success-screen h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: #c0385a;
+      margin: 1rem 0 0.5rem;
+      animation: fadeInUp 0.6s 0.3s both;
+    }
+
+    .success-screen p {
+      color: #d4708a;
+      font-size: 1rem;
+      animation: fadeInUp 0.6s 0.5s both;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .confetti {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      width: 10px; height: 10px;
+      border-radius: 2px;
+      animation: confettiFall linear forwards;
+    }
+
+    @keyframes confettiFall {
+      0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fondo con corazones -->
+  <div class="hearts-bg" id="heartsBg"></div>
+
+  <!-- Confetti container -->
+  <div class="confetti" id="confetti"></div>
+
+  <!-- Tarjeta principal -->
+  <div class="card" id="mainCard">
+
+    <!-- Vista de pregunta -->
+    <div id="questionView">
+      <span class="big-heart">🌹</span>
+      <h1>¿Serás mi San Valentín?</h1>
+      <p class="subtitle">una preguntita importante…</p>
+
+      <span class="bear" id="bear">🐻</span>
+
+      <p id="noMessage" style="color:#c0385a; font-family:'Playfair Display',serif; font-size:1rem; min-height:1.4em; margin-bottom:0.5rem;"></p>
+
+      <div class="buttons">
+        <button class="btn-yes" id="btnYes" onclick="sayYes()">
+          ❤️ ¡Sí!
+        </button>
+        <button class="btn-no" id="btnNo" onclick="sayNo()">
+          No…
+        </button>
+      </div>
+    </div>
+
+    <!-- Vista de éxito -->
+    <div class="success-screen" id="successView">
+      <span class="big-heart-success">🥰</span>
+      <h2>¡Sabía que dirías que sí!</h2>
+      <p>Eres la persona más especial de mi mundo. 💖<br>¡Feliz San Valentín!</p>
+    </div>
+
+  </div>
+
+  <script>
+    // --- Corazones flotantes de fondo ---
+    const bg = document.getElementById('heartsBg');
+    const emojis = ['❤️','🌸','💕','💗','🌷','💝','✨','💖'];
+    for (let i = 0; i < 22; i++) {
+      const el = document.createElement('span');
+      el.className = 'heart-float';
+      el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.fontSize = (0.8 + Math.random() * 1.4) + 'rem';
+      el.style.animationDuration = (8 + Math.random() * 14) + 's';
+      el.style.animationDelay = (Math.random() * 12) + 's';
+      bg.appendChild(el);
+    }
+
+    // --- Lógica del botón No ---
+    const messages = [
+      "¿Seguro? 🥺",
+      "Piénsalo bien… ¿de verdad?",
+      "¡Venga, anímate! 🌹",
+      "Eso no puede ser verdad…",
+      "¡El osito llora! 😢",
+      "Una oportunidad más, anda…",
+      "¡Prometo ser la mejor persona!",
+      "¿De verdaaad? 😭",
+      "¡El corazón se rompe! 💔",
+      "Mira qué carita pone el osito…",
+      "¡Pleeease! 🙏",
+      "Solo di que sí, es fácil…",
+      "¡No hagas esto! 😿",
+      "Me voy a poner a llorar yo también…",
+      "¿Y si te lo pido con una rosa? 🌹",
+      "El osito no duerme si dices que no 😴",
+      "Recuerda: el karma existe 👀",
+      "Última oportunidad… en serio esta vez",
+      "¡PORFA! Con mayúsculas ya 🥹",
+      "Okay, ¿y si traigo chocolate? 🍫",
+      "¿Y si traigo también pizza? 🍕",
+      "Mira que el botón de Sí cada vez es más grande…",
+      "Es el destino, ¡acéptalo! ✨",
+      "El universo dice que sí. Tú también deberías 🌟",
+      "¡Hasta las estrellas están de mi lado! ⭐",
+      "Última última oportunidad, lo juro 😭",
+      "Oye… ¿sigues ahí? 👀",
+      "Pulsa el Sí. Es lo correcto. Lo sabes.",
+      "Bueno ya... pero vas a lamentarlo 💔"
+    ];
+
+    let noCount = 0;
+    let yesSize = 16; // px
+    let noSize  = 16;
+
+    const btnYes = document.getElementById('btnYes');
+    const btnNo  = document.getElementById('btnNo');
+    const noMsg  = document.getElementById('noMessage');
+    const bear   = document.getElementById('bear');
+
+    const bears = ['🐻','🐻','😢','😢','😭','😭','💔','🥹','🥹','😿','😿','🫠','🫠','☠️','☠️','👻','👻','🤖','🤖','🌚','🌚','😤','😤','🫶','🫶','🥲','🥲','😵','😵','💀'];
+
+    function sayNo() {
+      noCount++;
+
+      // Mensaje
+      noMsg.textContent = messages[Math.min(noCount - 1, messages.length - 1)];
+
+      // Sí crece, No decrece
+      yesSize = Math.min(yesSize + 4, 58);
+      noSize  = Math.max(noSize  - 1.5, 8);
+
+      btnYes.style.fontSize = yesSize + 'px';
+      btnNo.style.fontSize  = noSize  + 'px';
+
+      // Cambia el osito
+      bear.textContent = bears[Math.min(noCount, bears.length - 1)];
+
+      // Ocultar No si es muy pequeño
+      if (noSize <= 8) {
+        btnNo.style.opacity = '0.35';
+        btnNo.style.pointerEvents = 'none';
+      }
+    }
+
+    function sayYes() {
+      document.getElementById('questionView').style.display = 'none';
+      const sv = document.getElementById('successView');
+      sv.style.display = 'flex';
+      launchConfetti();
+    }
+
+    // --- Confetti ---
+    function launchConfetti() {
+      const container = document.getElementById('confetti');
+      const colors = ['#ff6b8a','#ffccd5','#ff3366','#ffd6e0','#c0385a','#fff0f3','#e83e6c'];
+      for (let i = 0; i < 120; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.left = Math.random() * 100 + 'vw';
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.width  = (6 + Math.random() * 10) + 'px';
+        piece.style.height = (6 + Math.random() * 10) + 'px';
+        piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        piece.style.animationDuration = (1.5 + Math.random() * 2.5) + 's';
+        piece.style.animationDelay    = (Math.random() * 0.8) + 's';
+        container.appendChild(piece);
+        setTimeout(() => piece.remove(), 4000);
+      }
+    }
+  </script>
+</body>
+</html>
